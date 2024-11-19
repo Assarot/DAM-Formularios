@@ -1,4 +1,5 @@
 package pe.edu.upeu.excel;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,25 +61,24 @@ public class ReadAndWriteService {
                     Object[] valores = new Object[numColumnas - 1];
                     for (int k = 1; k < numColumnas; k++) {
                         Cell cell = row.getCell(k);
+
                         if (cell != null) {
-                            // Encriptar contraseña solo si es la tabla 'usuario' y la columna es 'password'
-                            if ("usuario".equalsIgnoreCase(nombreTabla) &&
-                                "password".equalsIgnoreCase(filaColumnas.getCell(k).getStringCellValue())) {
-                                valores[k - 1] = passwordEncoder.encode(cell.getStringCellValue());
-                            } else {
-                                switch (cell.getCellType()) {
-                                    case STRING:
-                                        valores[k - 1] = cell.getStringCellValue();
-                                        break;
-                                    case NUMERIC:
-                                        valores[k - 1] = cell.getNumericCellValue();
-                                        break;
-                                    case BOOLEAN:
-                                        valores[k - 1] = cell.getBooleanCellValue();
-                                        break;
-                                    default:
-                                        valores[k - 1] = null;
+                            String columna = filaColumnas.getCell(k).getStringCellValue();
+                            if ("usuario".equalsIgnoreCase(nombreTabla) && "password".equalsIgnoreCase(columna)) {
+                                // Encriptar la contraseña si es la columna password
+                                String rawPassword = getCellValue(cell) != null ? getCellValue(cell).toString().trim() : "";
+                                System.out.println("Contraseña obtenida: '" + rawPassword + "'");
+
+                                if (!rawPassword.isEmpty()) {
+                                    String hashedPassword = passwordEncoder.encode(rawPassword);
+                                    System.out.println("Hash generado: " + hashedPassword);
+                                    valores[k - 1] = hashedPassword;
+                                } else {
+                                    System.out.println("Advertencia: La contraseña está vacía o nula.");
+                                    valores[k - 1] = null; // Manejo de contraseñas vacías
                                 }
+                            } else {
+                                valores[k - 1] = getCellValue(cell);
                             }
                         }
                     }
@@ -91,6 +91,27 @@ public class ReadAndWriteService {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private Object getCellValue(Cell cell) {
+        switch (cell.getCellType()) {
+            case STRING:
+                return cell.getStringCellValue().trim();
+            case NUMERIC:
+                if (DateUtil.isCellDateFormatted(cell)) {
+                    return cell.getDateCellValue().toString(); // Maneja celdas con formato de fecha
+                } else {
+                    return String.valueOf((long) cell.getNumericCellValue()).trim(); // Maneja números
+                }
+            case BOOLEAN:
+                return cell.getBooleanCellValue();
+            case FORMULA:
+                return cell.getCellFormula();
+            case BLANK:
+                return "";
+            default:
+                return null;
         }
     }
 
