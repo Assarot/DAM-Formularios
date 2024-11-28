@@ -31,12 +31,10 @@ public class ReadAndWriteController {
             readAndWriteService.leerYSubirExcel(tempFile.getAbsolutePath());
 
             tempFile.delete();
-
-            // Devolver código 200 (OK) con el mensaje de éxito
+ 
             return ResponseEntity.ok("Archivo procesado exitosamente.");
         } catch (IOException e) {
             e.printStackTrace();
-            // Devolver código 500 (Error Interno del Servidor) con el mensaje de error
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al procesar el archivo.");
         }
     }

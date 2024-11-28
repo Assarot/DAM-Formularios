@@ -65,7 +65,7 @@ public class ReadAndWriteService {
                         if (cell != null) {
                             String columna = filaColumnas.getCell(k).getStringCellValue();
                             if ("usuario".equalsIgnoreCase(nombreTabla) && "password".equalsIgnoreCase(columna)) {
-                                // Encriptar la contraseña si es la columna password
+ 
                                 String rawPassword = getCellValue(cell) != null ? getCellValue(cell).toString().trim() : "";
                                 System.out.println("Contraseña obtenida: '" + rawPassword + "'");
 
@@ -75,7 +75,7 @@ public class ReadAndWriteService {
                                     valores[k - 1] = hashedPassword;
                                 } else {
                                     System.out.println("Advertencia: La contraseña está vacía o nula.");
-                                    valores[k - 1] = null; // Manejo de contraseñas vacías
+                                    valores[k - 1] = null; 
                                 }
                             } else {
                                 valores[k - 1] = getCellValue(cell);
@@ -100,9 +100,9 @@ public class ReadAndWriteService {
                 return cell.getStringCellValue().trim();
             case NUMERIC:
                 if (DateUtil.isCellDateFormatted(cell)) {
-                    return cell.getDateCellValue().toString(); // Maneja celdas con formato de fecha
+                    return cell.getDateCellValue().toString();  
                 } else {
-                    return String.valueOf((long) cell.getNumericCellValue()).trim(); // Maneja números
+                    return String.valueOf((long) cell.getNumericCellValue()).trim(); 
                 }
             case BOOLEAN:
                 return cell.getBooleanCellValue();

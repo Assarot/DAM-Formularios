@@ -34,20 +34,17 @@ public class ExportarExcel {
             Sheet sheet = workbook.createSheet(nombreTabla);
             ResultSetMetaData metaData = rs.getMetaData();
             int columnCount = metaData.getColumnCount();
-
-            // Nombre de la tabla en la primera fila
+ 
             Row tableNameRow = sheet.createRow(0);
             Cell tableNameCell = tableNameRow.createCell(0);
             tableNameCell.setCellValue(nombreTabla);
-
-            // Encabezados de columna en la segunda fila
+ 
             Row headerRow = sheet.createRow(1);
             for (int i = 1; i <= columnCount; i++) {
                 Cell headerCell = headerRow.createCell(i - 1);
                 headerCell.setCellValue(metaData.getColumnName(i));
             }
-
-            // Datos de la tabla en filas subsecuentes
+ 
             int rowNum = 2;
             while (rs.next()) {
                 Row row = sheet.createRow(rowNum++);
@@ -56,8 +53,7 @@ public class ExportarExcel {
                     cell.setCellValue(rs.getString(i));
                 }
             }
-
-            // Guardar el archivo
+ 
             try (FileOutputStream fileOut = new FileOutputStream(nombreArchivo)) {
                 workbook.write(fileOut);
             }
