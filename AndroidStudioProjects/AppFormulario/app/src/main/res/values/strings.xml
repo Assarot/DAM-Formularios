@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">AppFormulario</string>
+    <string-array name="categorias">
+        <item>Electrónica</item>
+        <item>Ropa</item>
+        <item>Alimentos</item>
+        <item>Hogar</item>
+    </string-array>
+    <string name="name_product">Nombre del producto</string>
+    <string name="price">Precio</string>
+    <string name="disponible">Disponible</string>
+    <string name="save_product">Guardar Producto</string>
+</resources>
